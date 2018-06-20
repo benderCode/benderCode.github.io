@@ -1,0 +1,23 @@
+@media all and (max-width: 1024px) and (min-width: 415px) {
+    /* 平板 414px-1024px */
+}
+
+@media all and (orientation: landscape) {
+    /* 横屏 */
+}
+
+@media all and (orientation: portrait) {
+    /* 竖屏 */
+}
+
+@media all and (max-aspect-ratio: 16/9) {
+    /* 竖屏 */
+}
+
+@media all and (-webkit-device-pixel-ratio: 2) {
+    /* 2倍屏 */
+}
+
+@media all and (-webkit-device-pixel-ratio: 3) {
+    /* 3倍屏 */
+}

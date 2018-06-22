@@ -1,10 +1,10 @@
 // storage 本地存储
 // localStorage/sessionStorage 只存在 String 类型
-// localStorage 长期存储，需手动删除
-// sessionStorage 浏览器关闭时清除
+// localStorage 长期存储
+// sessionStorage 当前标签页关闭时清除
 !(function(win, doc){
+    // localStorage/sessionStorage 方法类封装
     win.myLocal = new Object();
-    // localStorage 方法类封装
     // 设置 localStorage
     myLocal.setLocalItem = function(key, data) {
         window.localStorage.setItem(key, JSON.stringify(data));

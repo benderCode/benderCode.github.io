@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>数组方法扩展</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+            // 英文排序
+            var resultArray = array.sort(function (param1, param2) {
+                return param1.localeCompare(param2);
+            });
+            // 中文排序
+            var resultArray = array.sort(function (param1, param2) {
+                return param1.localeCompare(param2, 'zh');
+            });
+        </script>
+    </body>
+</html>

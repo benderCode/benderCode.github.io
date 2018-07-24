@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+
+<body>
+
+    <video id="video" width="640" height="480" autoplay></video>
+    <br>
+    <button id="snap">Snap Photo</button>
+
+    <button onclick="sendUrl()">提交下载</button>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <img src="" alt="">
+    <script type="text/javascript">
+        window.addEventListener("DOMContentLoaded", function() {
+            var canvas = document.getElementById("canvas"),
+                context = canvas.getContext("2d"),
+                video = document.getElementById("video"),
+                videoObj = {
+                    "video": true,
+                },
+                errBack = function(error) {
+                    alert(error.code)
+                    console.log("Video capture error: ", error.code);
+                };
+
+            if (navigator.getUserMedia) { // Standarda
+                navigator.getUserMedia(videoObj, function(stream) {
+                    video.src = stream;
+                    video.play();
+                }, errBack);
+            } else if (navigator.webkitGetUserMedia) { // WebKit-prefixed
+                navigator.webkitGetUserMedia(videoObj, function(stream) {
+                    video.src = window.webkitURL.createObjectURL(stream);
+                    video.play();
+                }, errBack);
+            } else if (navigator.mozGetUserMedia) { // Firefox-prefixed
+                navigator.mozGetUserMedia(videoObj, function(stream) {
+                    video.src = window.URL.createObjectURL(stream);
+                    video.play();
+                }, errBack);
+            }
+            document.getElementById("snap").addEventListener("click", function() {
+                context.drawImage(video, 0, 0, 640, 480);
+            });
+
+        }, false);
+
+        function download(type) {
+            //设置保存图片的类型
+            var imgdata = canvas.toDataURL(type);
+            //将mime-type改为image/octet-stream,强制让浏览器下载
+            var fixtype = function(type) {
+                type = type.toLocaleLowerCase().replace(/jpg/i, 'jpeg');
+                var r = type.match(/png|jpeg|bmp|gif/)[0];
+                return 'image/' + r;
+            }
+            imgdata = imgdata.replace(fixtype(type), 'image/octet-stream')
+            //将图片保存到本地
+            var saveFile = function(data, filename) {
+                var link = document.createElement('a');
+                link.href = data;
+                link.download = filename;
+                var event = document.createEvent('MouseEvents');
+                event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                link.dispatchEvent(event);
+            }
+            var filename = new Date().toLocaleDateString() + '.' + type;
+            saveFile(imgdata, filename);
+        }
+
+        function sendUrl() {
+            var canvas = document.getElementById('canvas'),
+                imgSrc = canvas.toDataURL();
+            document.getElementsByTagName('img')[0].src = imgSrc;
+            context.clearRect(video, 0, 0, 640, 480)
+            var type = 'png';
+            download(type);
+            clearCanvas()
+        }
+    </script>
+</body>
+
+</html>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <!-- 网站标题 google：66个字符也就是33个文字以内 百度：60个字符也就是30个文字以内 -->
-    <title>网站标题</title>
+    <title>移动端html模板(rem)</title>
     <!-- 用户是否可以通过他的手势来缩放整个应用程序 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" />
     <!-- 作者 -->
@@ -49,11 +50,10 @@
     <!-- <meta name="apple-touch-fullscreen" content="yes"/> -->
 
     <script type="text/javascript">
-        // console.log(navigator.userAgent)// 设备信息
-        !(function(doc, win) {
+        !(function (doc, win) {
             var docEle = doc.documentElement, //获取html元素
                 event = "onorientationchange" in window ? "orientationchange" : "resize", //判断是屏幕旋转还是resize;
-                fn = function() {
+                fn = function () {
                     var width = docEle.clientWidth;
                     width && (docEle.style.fontSize = width / 18.75 + "px"); //设置html的fontSize,640设计图32 750设计图18.75
                     win.addEventListener(event, fn, false);
@@ -63,6 +63,7 @@
         }(document, window));
     </script>
 </head>
+
 <body>
 </body>
 

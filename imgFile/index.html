@@ -8,6 +8,7 @@
     <title>ImgFile-文件处理</title>
     <link rel="stylesheet" href="../css/reset.css">
     <script src="../js/JQuery.1.12.4.min.js"></script>
+    <script src="../js/GetObjectURL.js"></script>
     <style>
         .container {
             height: 50vh;
@@ -110,18 +111,7 @@
                 }
             })
 
-            //获取预览图片路径
-            var getObjectURL = function (file) {
-                var url = null;
-                if (window.createObjectURL != undefined) { // basic
-                    url = window.createObjectURL(file);
-                } else if (window.URL != undefined) { // mozilla(firefox)
-                    url = window.URL.createObjectURL(file);
-                } else if (window.webkitURL != undefined) { // webkit or chrome
-                    url = window.webkitURL.createObjectURL(file);
-                }
-                return url;
-            }
+
             $(".fileInput1").change(function () {
                 var files = $(this)[0].files;
                 var _blobHtml = "";

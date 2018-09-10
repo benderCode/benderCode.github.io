@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PDF预览</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <script src="../js/JQuery.1.12.4.min.js"></script>
+    <script src="../js/PDFObject.min.js"></script>
+    <script src="../js/GetObjectURL.js"></script>
+</head>
+
+<body>
+    <input type="file" class="fileBtn">
+    <div class="pdfBox" style="height: 1000px;width: 800px;"></div>
+    <script>
+        $(function () {
+            $(".fileBtn").change(function () {
+                var file = $(this)[0].files;
+                // 渲染PDF  
+                // url 文件地址
+                // DOM 目标元素 盛放PDF的容器
+                // {page: '页码'} 其他配置
+                // PDFObject.embed(url,DOM,{page: '页码'})
+
+                // getObjectURL() 获取本地文件路径
+                PDFObject.embed(getObjectURL(file[0]), ".pdfBox", {
+                    page: "1"
+                });
+            })
+        })
+    </script>
+</body>
+
+</html>

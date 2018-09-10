@@ -6,19 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ImgFile-文件处理</title>
-    <link rel="stylesheet" href="https://bender-1257445616.cos.ap-beijing.myqcloud.com/css/reset.css?q-sign-algorithm=sha1&q-ak=AKIDhufSwDhHzwRKsqkZJtCxi6LSfB80DYqh&q-sign-time=1536048483;1536050283&q-key-time=1536048483;1536050283&q-header-list=&q-url-param-list=&q-signature=03d3e4165ec97eb2e02df263cb55d14ff3d4445a&x-cos-security-token=30d8f07ed9febece032b4261f6ac5e514693c8da10001&response-content-disposition=attachment">
-    <script src="https://bender-1257445616.cos.ap-beijing.myqcloud.com/js/JQuery3.3.1.min.js?q-sign-algorithm=sha1&q-ak=AKIDSDhXYG0PmI4tR8q2DnvzhFjFCN3f44ho&q-sign-time=1536048442;1536050242&q-key-time=1536048442;1536050242&q-header-list=&q-url-param-list=&q-signature=f1aa75784995018729725ccdf2c21f36df8ad988&x-cos-security-token=7813736215c5c4b845409470bef6b5c1b518a09810001&response-content-disposition=attachment"></script>
+    <link rel="stylesheet" href="../css/reset.css">
+    <script src="../js/JQuery.1.12.4.min.js"></script>
     <style>
         .container {
-            height: 100vh;
+            height: 50vh;
             margin: 0 auto;
             background: #dddddd;
+            overflow-y: scroll;
         }
 
         .fileBtnContent {
             position: relative;
-            width: 80px;
             height: 35px;
+            line-height: 35px;
             background: purple;
             border-radius: 8px;
         }
@@ -28,7 +29,6 @@
             font-size: 12px;
             color: #ffffff;
             text-align: center;
-            line-height: 35px;
         }
 
         .fileInput {
@@ -56,7 +56,7 @@
     <script>
         $(function () {
             // 上传图片 - start
-            $(".fileInput").change(function () {
+            $(".fileInput0").change(function () {
                 var imgArr = [];// 存放数据数组
                 var uploadFile = $(this)[0].files;// 选择的图片资源 
 
@@ -104,10 +104,33 @@
                                     <img src="'+ imgArr[i].base64 + '" alt="' + imgArr[i].name + '">\
                                 </li>';
                             }
-                            $(".imgUl").html(_html);
+                            $(".base64Img").html(_html);
                         }
                     }
                 }
+            })
+
+            //获取预览图片路径
+            var getObjectURL = function (file) {
+                var url = null;
+                if (window.createObjectURL != undefined) { // basic
+                    url = window.createObjectURL(file);
+                } else if (window.URL != undefined) { // mozilla(firefox)
+                    url = window.URL.createObjectURL(file);
+                } else if (window.webkitURL != undefined) { // webkit or chrome
+                    url = window.webkitURL.createObjectURL(file);
+                }
+                return url;
+            }
+            $(".fileInput1").change(function () {
+                var files = $(this)[0].files;
+                var _blobHtml = "";
+                for (var i = 0; i < files.length; i++) {
+                    _blobHtml += '<li class="imgItem">\
+                        <img src="'+ getObjectURL(files[i]) + '" alt="">\
+                    </li>'
+                }
+                $(".blobImg").html(_blobHtml);
             })
         })
     </script>
@@ -117,15 +140,30 @@
     <div class="container">
         <!-- 上传按钮 - start -->
         <div class="fileBtnContent">
-            <a class="fileBtn" href="javascript:;">选择文件</a>
-            <input class="fileInput" type="file" multiple="multiple">
+            <a class="fileBtn" href="javascript:;">选择文件(base64渲染图片)</a>
+            <input class="fileInput fileInput0" type="file" multiple="multiple">
         </div>
         <!-- 上传按钮 - end -->
         <!-- 盛放图片的容器 - start -->
-        <ul class="imgUl">
+        <ul class="imgUl base64Img">
             <!-- <li class="imgItem">
                 <img src="" alt="">
             </li> -->
+        </ul>
+        <!-- 盛放图片的容器 - end -->
+    </div>
+    <div class="container">
+        <!-- 上传按钮 - start -->
+        <div class="fileBtnContent">
+            <a class="fileBtn" href="javascript:;">选择文件(本地文件路径读取图片)</a>
+            <input class="fileInput fileInput1" type="file" multiple="multiple">
+        </div>
+        <!-- 上传按钮 - end -->
+        <!-- 盛放图片的容器 - start -->
+        <ul class="imgUl blobImg">
+            <!-- <li class="imgItem">
+                    <img src="" alt="">
+                </li> -->
         </ul>
         <!-- 盛放图片的容器 - end -->
     </div>

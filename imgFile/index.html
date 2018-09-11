@@ -112,51 +112,49 @@
                 return new File([u8arr], filename, { type: mime });
             }
 
+            // file 对象 转 base64
+            function fileToBase64(file) {
+                return new Promise(function (resolve, reject) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function (e) {
+                        if (e.target.result) {
+                            resolve(e.target.result)
+                        }
+                    }
+                })
+            }
+
+            // file 压缩
+            function reduceFile(file) {
+                return new Promise(function (resolve, reject) {
+                    // file 转 base64
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function (e) {
+                        if (e.target.result) {
+                            // base64 进行压缩
+                            reduceImg(e.target.result).then(function (newBase64) {
+                                // 压缩后的base64 再 转回 file
+                                resolve(dataURLtoFile(newBase64, file.name))
+                            })
+                        }
+                    }
+                })
+            }
+
             // 上传图片 - start
             $(".fileInput0").change(function () {
                 var imgArr = [];// 存放数据数组
-                var uploadFile = $(this)[0].files;// 选择的图片资源 
-
-                var fileIndex = 0;// 循环的索引
-
-                // file对象 uploadFile[fileIndex]
-                // name:"logo.png" // 文件名
-                // size:27268   // 大小KB
-                // type:"image/png" // 类型
-
-                // new FileReader() 对象 获取图片的 base64 
-                var reader = new FileReader();
-
-                reader.readAsDataURL(uploadFile[fileIndex]);
-
-                // new FileReader() 对象读取完成方法 onload
-                reader.onload = function (e) {
-
-                    // e.target.result 读取到的 base64 
-                    if (e.target.result) {
-
-                        // 文件类型校验
-                        if (/(.png|.jpg|.jpeg)$/gi.test(uploadFile[fileIndex].name)) {
-                            // 符合校验操作
-                            reduceImg(e.target.result).then(function (newUrl) {
-                                $(".base64Img").append('<li class="imgItem">\
-                                    <img src="'+ newUrl + '" alt="">\
-                                </li>')
-                            })
-                        } else {
-                            // 不符合校验操作
-                            console.log("不符合")
-                        }
-
-                        // 增加索引
-                        fileIndex++;
-                        if (fileIndex < uploadFile.length) {
-                            reader.readAsDataURL(uploadFile[fileIndex]);
-                        }
-                    }
+                var files = $(this)[0].files;// 选择的图片资源 
+                for (var i = 0; i < files.length; i++) {
+                    fileToBase64(files[i]).then(function (base64) {
+                        $(".base64Img").append('<li class="imgItem">\
+                                <img src="'+ base64 + '" alt="">\
+                            </li>')
+                    })
                 }
             })
-
 
             $(".fileInput1").change(function () {
                 var files = $(this)[0].files;

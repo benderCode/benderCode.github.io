@@ -9,9 +9,10 @@
     <link rel="stylesheet" href="../css/reset.css">
     <script src="../js/JQuery.1.12.4.min.js"></script>
     <script src="../js/GetObjectURL.js"></script>
+    <script src="../js/exif.2.3.0.min.js"></script>
     <style>
         .container {
-            height: 50vh;
+            height: 30vh;
             margin: 0 auto;
             background: #dddddd;
             overflow-y: scroll;
@@ -56,6 +57,73 @@
     </style>
     <script>
         $(function () {
+            // iphone 拍摄图片旋转角度问题
+            function exif(file) {
+                return new Promise(function (resolve, reject) {
+                    // 按顺时针旋转
+                    EXIF.getData(file, function () {
+                        // 手机旋转角度      返回值     图片旋转的角度
+                        // iphone 垂直拍摄照片 6 图片默认旋转270deg(即向左旋转90deg)    
+                        // iphone 90deg拍摄照片 3 图片默认旋转180deg(倒置)    
+                        // iphone 180deg拍摄照片 8 图片默认旋转90deg(即向右旋转90deg)    
+                        // iphone 270deg拍摄照片 1 图片正常    
+                        // 获取旋转角度 Orientation
+                        var Orientation = EXIF.getTag(this, 'Orientation');
+                        // FileReader 对象 获取file对象的base64资源
+                        var reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = function (e) {
+                            if (e.target.result) {
+                                if (Orientation) {
+                                    // 创建 Image 对象
+                                    var img = new Image();
+                                    img.src = e.target.result;
+                                    img.onload = function () {
+                                        // 获取图片 宽、高
+                                        var width = img.width;
+                                        var height = img.height;
+                                        // 创建 canvas 对象 宽高和图像宽高相同
+                                        var canvas = document.createElement("canvas");
+                                        var ctx = canvas.getContext("2d");
+                                        // drawImage(图片对象,x坐标起始点,y坐标起始点)
+                                        switch (Number(Orientation)) {
+                                            case 1:
+                                                // canvas 宽高 和 图片宽高相同
+                                                canvas.width = width;
+                                                canvas.height = height;
+                                                ctx.drawImage(img, 0, 0);
+                                                break;
+                                            case 3:
+                                                canvas.width = height;
+                                                canvas.height = width;
+                                                ctx.rotate(3 * Math.PI);
+                                                ctx.drawImage(img, -width, -height);
+                                                break;
+                                            case 6:
+                                                canvas.width = height;
+                                                canvas.height = width;
+                                                ctx.rotate(-1.5 * Math.PI);
+                                                ctx.drawImage(img, 0, -height);
+                                                break;
+                                            case 8:
+                                                canvas.width = height;
+                                                canvas.height = width;
+                                                ctx.rotate(1.5 * Math.PI);
+                                                ctx.drawImage(img, -width, 0);
+                                                break;
+                                        }
+                                        var newBase64 = canvas.toDataURL("image/jpeg", 0.92);
+                                        resolve(newBase64)
+                                    }
+                                } else {
+                                    resolve(e.target.result)
+                                }
+                            }
+                        }
+                    });
+                })
+            }
+
             // 图片压缩 ES6 canvas
             function reduceImg(base64) {
                 return new Promise(function (resolve, reject) {
@@ -166,6 +234,18 @@
                 }
                 $(".blobImg").html(_blobHtml);
             })
+
+            $(".fileInput2").change(function () {
+                if (navigator.userAgent.match(/iphone/i)) {
+                    exif($(this)[0].files[0]).then(function (base64) {
+                        $(".imgView").attr("src", base64)
+                    })
+                } else {
+                    fileToBase64($(this)[0].files[0]).then(function (base64) {
+                        $(".imgView").attr("src", base64)
+                    })
+                }
+            })
         })
     </script>
 </head>
@@ -179,7 +259,7 @@
         <!-- 上传按钮 - start -->
         <div class="fileBtnContent">
             <a class="fileBtn" href="javascript:;">选择文件(base64渲染图片)</a>
-            <input class="fileInput fileInput0" type="file" multiple="multiple">
+            <input class="fileInput fileInput0" type="file" multiple="multiple" accept='image/*'>
         </div>
         <!-- 上传按钮 - end -->
         <!-- 盛放图片的容器 - start -->
@@ -194,7 +274,7 @@
         <!-- 上传按钮 - start -->
         <div class="fileBtnContent">
             <a class="fileBtn" href="javascript:;">选择文件(本地文件路径读取图片)</a>
-            <input class="fileInput fileInput1" type="file" multiple="multiple">
+            <input class="fileInput fileInput1" type="file" multiple="multiple" accept='image/*'>
         </div>
         <!-- 上传按钮 - end -->
         <!-- 盛放图片的容器 - start -->
@@ -204,6 +284,15 @@
                 </li> -->
         </ul>
         <!-- 盛放图片的容器 - end -->
+    </div>
+
+    <div class="container">
+        <!-- iphone 拍摄图片旋转问题 -->
+        <div class="fileBtnContent">
+            <a class="fileBtn" href="javascript:;">选择文件(iphone图片旋转问题)</a>
+            <input class="fileInput fileInput2" type="file" accept='image/*'>
+        </div>
+        <img class="imgView" src="" alt="" style="width:100%;">
     </div>
 </body>
 

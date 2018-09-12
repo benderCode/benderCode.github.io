@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>二维码</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <style>
+        .inputText{
+            height: 30px;
+            font-size: 14px;
+            color: #333333;
+            border: 1px solid #cccccc;
+        }
+    </style>
+    <script src="../js/JQuery.1.12.4.min.js"></script>
+    <script src="../js/GetObjectURL.js"></script>
+    <script src="../js/JQuery.qrcode.min.js"></script>
+</head>
+
+<body>
+    <div class="box">
+        <input class="inputText" type="text" placeholder="请输入信息">
+        <a class="createBtn" href="javascript:;">生成二维码</a>
+        <div class="qrcodeBox"></div>
+    </div>
+    <div class="box">
+        <input type="file" class="fileBtn">
+    </div>
+    <script>
+        $(function () {
+
+            // 创建二维码
+            $(".createBtn").click(function () {
+                // new QRCode(DOM,option)
+                // DOM 原生js DOM
+                // option
+                var qrcode = new QRCode($('.qrcodeBox')[0], {
+                    render: 'canvas',
+                    width: 200,
+                    height: 200,
+                    foreground: "black",
+                    background: "#ffffff",
+                    text: $(".inputText").val(),// 设置二维码内容信息
+                })
+                // qrcode.makeCode($(".inputText").val()); // 设置二维码内容信息
+            })
+        })
+    </script>
+</body>
+
+</html>

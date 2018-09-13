@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>移动端签名</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <script src="../js/JQuery.1.12.4.min.js"></script>
+    <style>
+        .content {width: 500px; height: 300px; border: 1px solid #dddddd;}
+        .imgView { width: 500px;height: 300px;border: 1px solid #dddddd;}
+    </style>
+</head>
+
+<body>
+    <div class="content"></div>
+    <input class="yesBtn" type="button" value="保存">
+    <input class="noBtn" type="button" value="清除">
+    <img class="imgView" src="" alt="">
+    <script>
+        $(function () {
+            function lineCanvas(obj, fn) {
+                this.linewidth = 1;
+                this.color = "#000000";
+                this.background = "#ffffff";
+                for (var i in obj) {
+                    this[i] = obj[i];
+                };
+                this.canvas = document.createElement("canvas");
+                this.el.appendChild(this.canvas);
+                this.cxt = this.canvas.getContext("2d");
+                this.canvas.width = this.el.clientWidth;
+                this.canvas.height = this.el.clientHeight;
+                this.cxt.fillStyle = this.background;
+                this.cxt.fillRect(0, 0, this.canvas.width, this.canvas.width);
+                this.cxt.strokeStyle = this.color;
+                this.cxt.lineWidth = this.linewidth;
+                this.cxt.lineCap = "round";
+                //开始绘制
+                this.canvas.addEventListener("touchstart", function (e) {
+                    this.cxt.beginPath();
+                    this.cxt.moveTo(e.changedTouches[0].pageX, e.changedTouches[0].pageY);
+                }.bind(this), false);
+
+                //绘制中
+                this.canvas.addEventListener("touchmove", function (e) {
+                    this.cxt.lineTo(e.changedTouches[0].pageX, e.changedTouches[0].pageY);
+                    this.cxt.stroke();
+                }.bind(this), false);
+
+                //结束绘制
+                this.canvas.addEventListener("touchend", function () {
+                    this.cxt.closePath();
+                }.bind(this), false);
+
+                //清除画布
+                this.clearEl.addEventListener("click", function () {
+                    this.cxt.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                }.bind(this), false);
+                //保存图片，直接转base64
+                this.saveEl.addEventListener("click", function () {
+                    var imgBase64 = this.canvas.toDataURL();
+                    fn(imgBase64)
+                }.bind(this), false);
+            };
+            new lineCanvas({
+                el: $(".content")[0], //绘制canvas的父级div
+                clearEl: $(".noBtn")[0], //清除按钮
+                saveEl: $(".yesBtn")[0], //保存按钮
+                linewidth: 5, //线条粗细，选填
+                color: "#000", //线条颜色，选填
+                // background: "#ffffff" //线条背景，选填
+            }, function (data) {
+                $(".imgView").attr('src', data);
+            });
+        })
+    </script>
+</body>
+
+</html>

@@ -19,4 +19,6 @@ var dependencies = {
     "react-native-signature-capture": "^0.4.9",// 签名
     "react-native-sound": "^0.10.4",// 播放录音
     "react-native-swiper": "^1.5.13",// 轮播图
+    "react-native-banner-carousel": "^1.0.2",// 轮播图
+    "react-native-background-timer": "^2.0.1",// 锁屏倒计时
 }

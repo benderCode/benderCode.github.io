@@ -27,7 +27,8 @@ import IndexTab from "./home/Home";// 工作台
 // tab-start
 const TabOptions = (tabBarTitle, normalImage, selectedImage) => {
     const tabBarLabel = tabBarTitle;
-    const tabBarIcon = (({ focused }) => {
+    const tabBarIcon = (({ focused, tintColor }) => {
+        // focused 焦点  tintColor该样式可以覆盖图片颜色
         return (
             <View style={styles.tabBox}>
                 <Image

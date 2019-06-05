@@ -29,4 +29,5 @@ var dependencies = {
     "react-native-swipeout": "^2.3.6",// 侧滑按钮
     "react-native-view-shot": "^2.5.0",// 截屏
     "react-native-parallax-scroll-view": "0.21.3",// 下拉放大
+    "react-native-code-push": "^5.6.0",// 微软热更新
 }

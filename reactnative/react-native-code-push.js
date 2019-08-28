@@ -3,45 +3,66 @@
  * 微软热更新
  * https://github.com/microsoft/react-native-code-push
  *
- * 需脚手架
- * code-push-cli
- * appcenter-cli
- *
- *
- * 指令
- *
- * code-push login             登录
- * code-push logout            登出
- *
- * <deploymentName> 部署环境
- * Production 生产
- * Staging 测试
- *
- * <AppName> App名
- *
- * <Platform> 平台/系统
- *
- * --t     版本号  例： 1.1.0
- * --dev   是否开启开发者模式  默认false
- * --des   更新内容描述
- * --d     更新的环境 正式/Production 测试/Staging 默认/Staging
- * --m     是否强制更新
- *
- * code-push deployment ls <AppName> -k
- * 查看 Key (Production, Staging)
- *
- * 提交更新
- * code-push release-react <AppName> <Platform> --t <本更新包面向的旧版本号> --d <生产/测试> --des <本次更新说明> --m
- * 例： code-push release-react WJSJAndroid android  --t 2.2.0  --des "员工评价提交测试" --m
- * 例： code-push release-react WJSJ-IOS ios --t 2.1.0 --d Production --des "0531上线"
- *
- * code-push rollback <appName> <deploymentName> --targetRelease vNumber
- * 回滚到指定版本 vNumber版本号
- * 
- * code-push deployment clear <appName> <deploymentName>
- * 清楚所有发布版本
- *
- *
+操作需安装 code-push-cli
+npm install -g code-push-cli
+
+登录
+code-push login http://101.200.60.9:3000/
+
+登出
+code-push logout
+
+注册应用
+code-push app add <name> <Platform> react-native
+name    应用名称
+Platform    平台 android / ios
+例子：
+code-push app add WJSJ-Android android react-native
+code-push app add WJSJ-IOS ios react-native
+
+查看 app key
+code-push deployment ls <AppName> -k
+例子：
+code-push deployment ls WJSJ-IOS -k
+返回
+WJSJ-Android
+Production      kw1z7kJG2TypTenS6yU2wo5E66vr4ksvOXqog       正式
+Staging         dErOUQOEovCX5tCpJCaRVok2KSbl4ksvOXqog       测试
+
+WJSJ-IOS
+Production      iiUGHYT9eYwApbU5EphGCrcmWb1n4ksvOXqog       正式
+Staging         PfFGAuVaV4y6QJB6MWujCc31lQIg4ksvOXqog       测试
+
+更新准备
+    -进入项目根目录
+    -yarn or npm install 安装依赖
+    -代码无问题，输入更新指令
+更新指令
+code-push release-react <AppName> <Platform> --t <本更新包面向的旧版本号> --d <生产/测试> --des <本次更新说明> --m true
+    --t     版本号  例： 1.1.0
+    --d     更新的环境 正式/Production 测试/Staging 默认/Staging
+    --des   更新内容描述
+    --m     是否强制更新(是否弹窗)
+
+例子： 
+测试
+code-push release-react WJSJ-Android android --t 2.5.0 --des "更新内容:测试热更新下载速度" --m
+code-push release-react WJSJ-IOS ios --t 2.5.0 --des "更新内容:测试热更新下载速度" --m
+正式
+code-push release-react WJSJAndroid android --t 2.4.0 --d Production --des "抢购库存问题" --m
+code-push release-react WJSJ-IOS ios --t 2.4.0 --d Production --des "抢购库存问题" --m
+
+回滚到指定版本
+code-push rollback <appName> <deploymentName> --targetRelease vNumber  
+deploymentName Production/Staging
+例子：
+code-push rollback WJSJ-IOS Staging --targetRelease v1  
+
+清楚发布版本  
+code-push deployment clear <appName> <deploymentName> 
+例子：
+code-push deployment clear WJSJ-IOS Staging
+
  *
 */
 

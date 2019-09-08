@@ -52,6 +52,9 @@ code-push release-react WJSJ-IOS ios --t 2.5.0 --des "更新内容:测试热更�
 code-push release-react WJSJAndroid android --t 2.4.0 --d Production --des "抢购库存问题" --m
 code-push release-react WJSJ-IOS ios --t 2.4.0 --d Production --des "抢购库存问题" --m
 
+查看历史版本
+code-push deployment history <appName> <deploymentName> 
+
 回滚到指定版本
 code-push rollback <appName> <deploymentName> --targetRelease vNumber  
 deploymentName Production/Staging
